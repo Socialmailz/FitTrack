@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:fittrack_mini/pages/home_page.dart';
+import 'package:fittrack_mini/services/local_storage_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import 'app.dart';
-import 'services/local_storage_service.dart';
-import 'core/theme/theme_provider.dart';
+void main() {
+  runApp(const MyApp());
+}
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await LocalStorageService.init();
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
-      child: const FitTrackMiniApp(),
-    ),
-  );
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => LocalStorageService(),
+      child: MaterialApp(
+        title: 'FitTrack Mini',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          textTheme: GoogleFonts.latoTextTheme(
+            Theme.of(context).textTheme,
+          ),
+        ),
+        home: const HomePage(),
+      ),
+    );
+  }
 }

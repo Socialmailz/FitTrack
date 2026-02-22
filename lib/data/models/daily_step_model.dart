@@ -9,4 +9,6 @@ class DailyStepModel extends HiveObject {
 
   @HiveField(1)
   late int steps;
+
+  DailyStepModel({required this.date, required this.steps});
 }

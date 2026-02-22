@@ -16,9 +16,10 @@ class WaterModelAdapter extends TypeAdapter<WaterModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return WaterModel()
-      ..date = fields[0] as DateTime
-      ..intake = fields[1] as int;
+    return WaterModel(
+      date: fields[0] as DateTime,
+      amount: fields[1] as int,
+    );
   }
 
   @override
@@ -28,7 +29,7 @@ class WaterModelAdapter extends TypeAdapter<WaterModel> {
       ..writeByte(0)
       ..write(obj.date)
       ..writeByte(1)
-      ..write(obj.intake);
+      ..write(obj.amount);
   }
 
   @override

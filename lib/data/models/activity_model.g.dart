@@ -16,25 +16,29 @@ class ActivityModelAdapter extends TypeAdapter<ActivityModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return ActivityModel()
-      ..name = fields[0] as String
-      ..duration = fields[1] as int
-      ..calories = fields[2] as int
-      ..timestamp = fields[3] as DateTime;
+    return ActivityModel(
+      type: fields[0] as String,
+      duration: fields[1] as int,
+      distance: fields[2] as double,
+      calories: fields[3] as int,
+      date: fields[4] as DateTime,
+    );
   }
 
   @override
   void write(BinaryWriter writer, ActivityModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.type)
       ..writeByte(1)
       ..write(obj.duration)
       ..writeByte(2)
-      ..write(obj.calories)
+      ..write(obj.distance)
       ..writeByte(3)
-      ..write(obj.timestamp);
+      ..write(obj.calories)
+      ..writeByte(4)
+      ..write(obj.date);
   }
 
   @override

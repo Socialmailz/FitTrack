@@ -1,35 +1,36 @@
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
+import 'package:fittrack_mini/data/models/daily_step_model.dart';
+import 'package:fittrack_mini/data/models/water_model.dart';
+import 'package:fittrack_mini/data/models/activity_model.dart';
 
-import '../../data/models/activity_model.dart';
-import '../../data/models/daily_step_model.dart';
-import '../../data/models/water_model.dart';
-import '../../data/models/settings_model.dart';
+class LocalStorageService extends ChangeNotifier {
+  late Box<DailyStepModel> _dailyStepBox;
+  late Box<WaterModel> _waterBox;
+  late Box<ActivityModel> _activityBox;
 
-class LocalStorageService {
-  static Future<void> init() async {
-    final appDocumentDir = await getApplicationDocumentsDirectory();
-    await Hive.initFlutter(appDocumentDir.path);
-
-    // Register Adapters
-    Hive.registerAdapter(ActivityModelAdapter());
-    Hive.registerAdapter(DailyStepModelAdapter());
-    Hive.registerAdapter(WaterModelAdapter());
-    Hive.registerAdapter(SettingsModelAdapter());
-
-    // Open Boxes
-    await Hive.openBox<ActivityModel>('activities');
-    await Hive.openBox<DailyStepModel>('daily_steps');
-    await Hive.openBox<WaterModel>('water_intake');
-    await Hive.openBox<SettingsModel>('settings');
+  LocalStorageService() {
+    _dailyStepBox = Hive.box<DailyStepModel>('daily_steps');
+    _waterBox = Hive.box<WaterModel>('water_intake');
+    _activityBox = Hive.box<ActivityModel>('activities');
   }
 
-  Box<ActivityModel> get activityBox => Hive.box<ActivityModel>('activities');
-  Box<DailyStepModel> get dailyStepBox => Hive.box<DailyStepModel>('daily_steps');
-  Box<WaterModel> get waterBox => Hive.box<WaterModel>('water_intake');
-  Box<SettingsModel> get settingsBox => Hive.box<SettingsModel>('settings');
+  Box<DailyStepModel> get dailyStepBox => _dailyStepBox;
+  Box<WaterModel> get waterBox => _waterBox;
+  Box<ActivityModel> get activityBox => _activityBox;
 
-  Future<void> close() async {
-    await Hive.close();
+  Future<void> saveDailySteps(DailyStepModel dailySteps) async {
+    await _dailyStepBox.put(dailySteps.date.toIso8601String(), dailySteps);
+    notifyListeners();
+  }
+
+  Future<void> saveWaterIntake(WaterModel waterIntake) async {
+    await _waterBox.put(waterIntake.date.toIso8601String(), waterIntake);
+    notifyListeners();
+  }
+
+  Future<void> saveActivity(ActivityModel activity) async {
+    await _activityBox.add(activity);
+    notifyListeners();
   }
 }

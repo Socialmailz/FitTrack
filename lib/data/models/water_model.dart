@@ -8,5 +8,7 @@ class WaterModel extends HiveObject {
   late DateTime date;
 
   @HiveField(1)
-  late int intake;
+  late int amount;
+
+  WaterModel({required this.date, required this.amount});
 }

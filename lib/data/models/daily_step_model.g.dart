@@ -16,9 +16,10 @@ class DailyStepModelAdapter extends TypeAdapter<DailyStepModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return DailyStepModel()
-      ..date = fields[0] as DateTime
-      ..steps = fields[1] as int;
+    return DailyStepModel(
+      date: fields[0] as DateTime,
+      steps: fields[1] as int,
+    );
   }
 
   @override
